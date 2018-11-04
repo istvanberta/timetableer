@@ -2,9 +2,9 @@
 
 class Teacher
 {
-    private $id;
-    private $firstName;
-    private $lastName;
+    public $id;
+    public $firstName;
+    public $lastName;
 
     public function __construct(string $firstName, string $lastName, int $id = null)
     {
@@ -13,7 +13,7 @@ class Teacher
         $this->id = $id;
     }
 
-    public function getName()
+    public function getFullName(): string
     {
         return $this->lastName . ' ' . $this->firstName;
     }

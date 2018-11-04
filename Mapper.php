@@ -1,6 +1,6 @@
 <?php
 
-abstract class Mappper
+abstract class Mapper
 {
     protected $pdo;
 
@@ -8,5 +8,10 @@ abstract class Mappper
     {
         $reg = Registry::instance();
         $this->pdo = $reg->getPdo();
+    }
+
+    public function findById(int $id)
+    {
+
     }
 }
