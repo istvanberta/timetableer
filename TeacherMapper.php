@@ -2,18 +2,49 @@
 
 class TeacherMapper extends Mapper
 {
-    public function insert(Teacher $teacher): bool
+    public function findById(int $id): ?Teacher
+    {
+        $sql = 'SELECT id, first_name, last_name FROM teachers WHERE id = ?';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id]);
+        $result = $stmt->fetch();
+
+        if (!$result) {
+            return null;
+        }
+
+        return $this->mapRowToTeacher($result);
+    }
+
+    public function insert(Teacher $teacher)
     {
         $sql = 'INSERT INTO teachers (first_name, last_name) VALUES (?, ?)';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(1, $teacher->firstName, PDO::PARAM_STR);
-        $stmt->bindValue(2, $teacher->lastName, PDO::PARAM_STR);
+        $stmt->execute([$teacher->firstName, $teacher->lastName]);
 
-        if (!$stmt->execute()) {
-            return false;
-        }
-        
-        return true;        
+        $teacher->id = $this->pdo->lastInsertId();
+    }
+
+    public function update(Teacher $teacher)
+    {
+        $sql = 'UPDATE teachers SET first_name = ?, last_name = ? WHERE id = ?';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$teacher->firstName, $teacher->lastName, $teacher->id]);
+    }
+
+    public function delete(int $id)
+    {
+        $sql = 'DELETE FROM teachers WHERE id = ?';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id]);
+    }
+
+    protected function mapRowToTeacher(array $row): Teacher
+    {
+        return new Teacher($row['first_name'], $row['last_name'], $row['id']);
     }
 }

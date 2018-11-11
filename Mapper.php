@@ -9,9 +9,4 @@ abstract class Mapper
         $reg = Registry::instance();
         $this->pdo = $reg->getPdo();
     }
-
-    public function findById(int $id)
-    {
-
-    }
 }
