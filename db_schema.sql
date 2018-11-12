@@ -15,11 +15,10 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `subjects` (
-  `id` INT NOT NULL AUTO_INCREMENT,
   `abbrev` VARCHAR(45) NOT NULL,
   `name_sk` VARCHAR(45) NULL,
   `name_hu` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`abbrev`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -56,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `lessons` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_subject`
     FOREIGN KEY (`subject`)
-    REFERENCES `subjects` (`id`)
+    REFERENCES `subjects` (`abbrev`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_teacher`
