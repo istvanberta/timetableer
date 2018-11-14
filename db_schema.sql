@@ -16,8 +16,7 @@ DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `subjects` (
   `abbrev` VARCHAR(45) NOT NULL,
-  `name_sk` VARCHAR(45) NULL,
-  `name_hu` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NULL,
   PRIMARY KEY (`abbrev`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
