@@ -44,7 +44,7 @@ class SubjectMapper extends Mapper
         $stmt->execute([$id]);
     }
 
-    protected function mapRowToSubject()
+    protected function mapRowToSubject(array $row): Subject
     {
         return new Subject($row['abbrev'], $row['name'], $row['id']);
     }
