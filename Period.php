@@ -9,13 +9,13 @@ class Period
 
     public function __construct(
         string $period,
-        int $startTime,
-        int $endtime,
+        string $startTime,
+        string $endTime,
         int $id = null
     ) {
         $this->period = $period;
         $this->startTime = $startTime;
-        $this->endtime = $endTime;
+        $this->endTime = $endTime;
         $this->id = $id;
     }
 }
