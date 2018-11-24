@@ -1,6 +1,6 @@
 <?php
 
-class Class
+class SchoolClass
 {
     public $id;
     public $abbrev;
