@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `teachers` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE TABLE IF NOT EXISTS `classes` (
+CREATE TABLE IF NOT EXISTS `school_classes` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `abbrev` VARCHAR(45) NOT NULL,
   `name` VARCHAR(45) NOT NULL,
@@ -35,12 +35,12 @@ CREATE TABLE IF NOT EXISTS `lessons` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `day` ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday') NOT NULL,
   `period` INT NOT NULL,
-  `class` INT NOT NULL,
+  `school_class` INT NOT NULL,
   `subject` INT NOT NULL,
   `teacher` INT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_period_idx` (`period` ASC),
-  INDEX `fk_class_idx` (`class` ASC),
+  INDEX `fk_school_class_idx` (`school_class` ASC),
   INDEX `fk_subject_idx` (`subject` ASC),
   INDEX `fk_teacher_idx` (`teacher` ASC),
   CONSTRAINT `fk_period`
@@ -48,9 +48,9 @@ CREATE TABLE IF NOT EXISTS `lessons` (
     REFERENCES `periods` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_class`
-    FOREIGN KEY (`class`)
-    REFERENCES `classes` (`id`)
+  CONSTRAINT `fk_school_class`
+    FOREIGN KEY (`school_class`)
+    REFERENCES `school_classes` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_subject`
