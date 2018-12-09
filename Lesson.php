@@ -5,8 +5,7 @@ class Lesson extends Entity
     private $subject;
     private $classe;
     private $teacher;
-    private $day;
-    private $period;
+    private $time;
 
     private $isScheduled = false;
 
@@ -23,9 +22,7 @@ class Lesson extends Entity
 
     public function scheduleFor(Time $time)
     {
-        $this->day = $time->getDay();
-        $this->period = $time->getPeriod();
-
+        $this->time = $time;
         $this->isSchechuled = true;
     }
 
