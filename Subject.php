@@ -1,15 +1,13 @@
 <?php
 
-class Subject
+class Subject extends Entity
 {
-    public $id;
-    public $abbrev;
-    public $name;
+    private $abbrev;
+    private $name;
 
-    public function __construct(string $abbrev, string $name, int $id = null)
+    public function __construct(string $abbrev, string $name)
     {
         $this->abbrev = $abbrev;
         $this->name = $name;
-        $this->id = $id;
     }
 }
