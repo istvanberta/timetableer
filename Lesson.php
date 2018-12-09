@@ -29,7 +29,7 @@ class Lesson extends Entity
         $this->isSchechuled = true;
     }
 
-    public function isScheduled()
+    public function isScheduled(): bool
     {
         return $this->isScheduled;
     }
