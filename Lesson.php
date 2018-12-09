@@ -1,16 +1,36 @@
 <?php
 
-class Lesson
+class Lesson extends Entity
 {
-    public $id;
-    public $day;
-    public $period;
-    public $schoolClass;
-    public $subject;
-    public $teacher;
+    private $subject;
+    private $classe;
+    private $teacher;
+    private $day;
+    private $period;
 
-    public function __construct()
+    private $isScheduled = false;
+
+    public function __construct(Subject $subject, Classe $classe)
     {
-        
+        $this->subject = $subject;
+        $this->classe = $classe;
+    }
+
+    public function assignToTeacher(Teacher $teacher)
+    {
+        $this->teacher = $teacher;
+    }
+
+    public function scheduleFor(Time $time)
+    {
+        $this->day = $time->getDay();
+        $this->period = $time->getPeriod();
+
+        $this->isSchechuled = true;
+    }
+
+    public function isScheduled()
+    {
+        return $this->isScheduled;
     }
 }
