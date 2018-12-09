@@ -15,7 +15,6 @@ class SubjectMapper extends Mapper
         }
 
         return $this->mapRowToSubject($result);
-
     }
 
     public function insert(Subject $subject)
