@@ -16,12 +16,12 @@ class LessonCollection implements Iterator
         $this->lessons[] = $lesson;
     }
 
-    public function current()
+    public function current(): Lesson
     {
         return $this->lessons[$this->position];
     }
 
-    public function key()
+    public function key(): int
     {
         return $this->position;
     }
@@ -36,7 +36,7 @@ class LessonCollection implements Iterator
         $this->position = 0;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->lessons[$this->position]);
     }
