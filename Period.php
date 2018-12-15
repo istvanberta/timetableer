@@ -1,21 +1,13 @@
 <?php
 
-class Period
+class Period extends Entity
 {
-    public $id;
-    public $period;
-    public $startTime;
-    public $endTime;
+    private $number;
+    private $interval;
 
-    public function __construct(
-        string $period,
-        string $startTime,
-        string $endTime,
-        int $id = null
-    ) {
-        $this->period = $period;
-        $this->startTime = $startTime;
-        $this->endTime = $endTime;
-        $this->id = $id;
+    public function __construct(int $number, Interval $interval)
+    {
+        $this->number = $number;
+        $this->interval = $interval;
     }
 }
