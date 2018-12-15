@@ -5,7 +5,7 @@ class Lesson extends Entity
     private $subject;
     private $classe;
     private $teacher;
-    private $time;
+    private $timeslot;
 
     private $isScheduled = false;
 
@@ -20,9 +20,9 @@ class Lesson extends Entity
         $this->teacher = $teacher;
     }
 
-    public function scheduleFor(Time $time)
+    public function scheduleFor(Timeslot $timeslot)
     {
-        $this->time = $time;
+        $this->timeslot = $timeslot;
         $this->isSchechuled = true;
     }
 
