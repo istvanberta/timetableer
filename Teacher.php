@@ -1,20 +1,17 @@
 <?php
 
-class Teacher
+class Teacher extends Entity
 {
-    public $id;
-    public $firstName;
-    public $lastName;
+    private $name;
+    private $abbrev;
 
-    public function __construct(string $firstName, string $lastName, int $id = null)
+    public function __construct(Name $name)
     {
-        $this->firstName = $firstName;
-        $this->lastName = $lastName;
-        $this->id = $id;
+        $this->name = $name;
     }
 
-    public function getFullName(): string
+    public function setAbbrev(string $abbrev)
     {
-        return $this->lastName . ' ' . $this->firstName;
+        $this->abbrev = $abbrev;
     }
 }
