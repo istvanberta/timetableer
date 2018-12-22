@@ -2,21 +2,6 @@
 
 class SubjectMapper extends Mapper
 {
-    public function findById(int $id): ?Subject
-    {
-        $sql = 'SELECT id, abbrev, name FROM subjects WHERE id = ?';
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
-        $result = $stmt->fetch();
-
-        if (!$result) {
-            return null;
-        }
-
-        return $this->mapRowToSubject($result);
-    }
-
     public function insert(Subject $subject)
     {
         $sql = 'INSERT INTO subjects (abbrev, name) VALUES (?, ?)';
@@ -43,8 +28,15 @@ class SubjectMapper extends Mapper
         $stmt->execute([$id]);
     }
 
-    protected function mapRowToSubject(array $row): Subject
+    protected function findByIdStmt(): PDOStatement
     {
-        return new Subject($row['abbrev'], $row['name'], $row['id']);
+        $sql = 'SELECT id, abbrev, name FROM subjects WHERE id = ?';
+
+        return $this->pdo->prepare($sql);
+    }
+
+    protected function mapRowToEntity(array $row): Entity
+    {
+        return new Subject($row['abbrev'], $row['name']);
     }
 }
