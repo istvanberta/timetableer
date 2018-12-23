@@ -29,7 +29,7 @@ abstract class Mapper
     abstract protected function findByIdStmt(): PDOStatement;
     abstract protected function mapRowToEntity(array $row): Entity;
 
-    private function setEntityId(Entity $entity, int $id)
+    protected function setEntityId(Entity $entity, int $id)
     {
         $reflection = new ReflectionClass($entity);
         $idProperty = $reflection->getProperty('id');

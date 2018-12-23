@@ -9,7 +9,7 @@ class SubjectMapper extends Mapper
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$subject->abbrev, $subject->name]);
 
-        $subject->id = $this->pdo->lastInsertId();
+        $this->setEntityId($subject, $this->pdo->lastInsertId());
     }
 
     public function update(Subject $subject)
@@ -17,7 +17,7 @@ class SubjectMapper extends Mapper
         $sql = 'UPDATE subjects SET abbrev = ?, name = ? WHERE id = ?';
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$subject->abbrev, $subject->name, $subject->id]);
+        $stmt->execute([$subject->abbrev, $subject->name, $subject->getId()]);
     }
 
     public function delete(int $id)
