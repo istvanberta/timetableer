@@ -1,54 +1,49 @@
 <?php
 
-class SchoolClassMapper extends Mapper
+class ClasseMapper extends Mapper
 {
-    public function findById(int $id): ?SchoolClass
+    public function insert(Classe $classe)
     {
-        $sql = 'SELECT id, abbrev, name FROM school_classes WHERE id = ?';
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
-        $result = $stmt->fetch();
-
-        if (!$result) {
-            return null;
-        }
-
-        return $this->mapRowToSchoolClass($result);
-    }
-
-    public function insert(SchoolClass $schoolClass)
-    {
-        $sql = 'INSERT INTO school_classes (abbrev, name) VALUES (?, ?)';
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$schoolClass->abbrev, $schoolClass->name]);
-
-        $schoolClass->id = $this->pdo->lastInsertId();
-    }
-
-    public function update(SchoolClass $schoolClass)
-    {
-        $sql = 'UPDATE school_classes SET abbrev = ?, name = ? WHERE id = ?';
+        $sql = 'INSERT INTO classes (abbrev, name) VALUES (?, ?)';
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
-            $schoolClass->abbrev,
-            $schoolClass->name,
-            $schoolClass->id
+            $classe->getAbbrev(),
+            $classe->getName()
+        ]);
+
+        $this->setEntityId($classe, $this->pdo->lastInsertId());
+    }
+
+    public function update(Classe $classe)
+    {
+        $sql = 'UPDATE classes SET abbrev = ?, name = ? WHERE id = ?';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            $classe->getAbbrev(),
+            $classe->getName(),
+            $classe->getId()
         ]);
     }
 
     public function delete(int $id)
     {
-        $sql = 'DELETE FROM school_classes WHERE id = ?';
+        $sql = 'DELETE FROM classes WHERE id = ?';
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$id]);
     }
 
-    protected function mapRowToSchoolClass(array $row): SchoolClass
+    protected function findByIdStmt(): PDOStatement
     {
-        return new SchoolClass($row['abbrev'], $row['name'], $row['id']);
+        $sql = 'SELECT id, abbrev, name FROM classes WHERE id = ?';
+
+        return $this->pdo->prepare($sql);
+    }
+
+    protected function mapRowToEntity(array $row): Entity
+    {
+        return new Classe($row['abbrev'], $row['name']);
     }
 }
