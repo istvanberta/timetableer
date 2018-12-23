@@ -10,4 +10,14 @@ class Classe extends Entity
         $this->abbrev = $abbrev;
         $this->name = $name;
     }
+
+    public function getAbbrev()
+    {
+        return $this->abbrev;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
 }
