@@ -6,13 +6,12 @@ abstract class Mapper
 
     public function __construct()
     {
-        $reg = Registry::instance();
-        $this->pdo = $reg->getPdo();
+        $this->pdo = Registry::instance()->getPdo();
     }
 
     public function findById(int $id): ?Entity
     {
-        $stmt = $this->findByIdStmt();
+        $stmt = $this->pdo->prepare($this->findByIdSql());
         $stmt->execute([$id]);
         $row = $stmt->fetch();
 
@@ -20,13 +19,10 @@ abstract class Mapper
             return null;
         }
 
-        $entity = $this->mapRowToEntity($row);
-        $this->setEntityId($entity, $row['id']);
-
-        return $entity;
+        return $this->mapRowToEntity($row);
     }
 
-    abstract protected function findByIdStmt(): PDOStatement;
+    abstract protected function findByIdSql(): string;
     abstract protected function mapRowToEntity(array $row): Entity;
 
     protected function setEntityId(Entity $entity, int $id)
