@@ -10,4 +10,14 @@ class Period extends Entity
         $this->number = $number;
         $this->interval = $interval;
     }
+
+    public function getNumber(): int
+    {
+        return $this->number;
+    }
+
+    public function getInterval(): Interval
+    {
+        return $this->interval;
+    }
 }
