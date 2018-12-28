@@ -2,41 +2,106 @@
 
 class SubjectMapper extends Mapper
 {
+    private $findByIdStmt;
+    private $insertStmt;
+    private $updateStmt;
+    private $deleteStmt;
+
+    public function findById(int $id): ?Entity
+    {
+        $this->findByIdStmt()->execute([$id]);
+        $row = $this->findByIdStmt()->fetch();
+
+        if (!$row) {
+            return null;
+        }
+
+        return $this->mapRowToSubject($row);
+    }
+
+    private function findByIdStmt(): PDOStatement
+    {
+        if (!isset($this->findByIdStmt)) {
+            $this->findByIdStmt = $this->pdo->prepare($this->sqlForFindById());
+        }
+
+        return $this->findByIdStmt;
+    }
+
+    private function sqlForFindById(): string
+    {
+        return 'SELECT id, abbrev, name FROM subjects WHERE id = ?';
+    }
+
     public function insert(Subject $subject)
     {
-        $sql = 'INSERT INTO subjects (abbrev, name) VALUES (?, ?)';
+        $this->insertStmt()->execute([
+            $subject->getAbbrev(),
+            $subject->getName()
+        ]);
+    }
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$subject->abbrev, $subject->name]);
+    private function insertStmt(): PDOStatement
+    {
+        if (!isset($this->insertStmt)) {
+            $this->insertStmt = $this->pdo->prepare($this->sqlForInsert());
+        }
 
-        $this->setEntityId($subject, $this->pdo->lastInsertId());
+        return $this->insertStmt;
+    }
+
+    private function sqlForInsert(): string
+    {
+        return 'INSERT INTO subjects (abbrev, name) VALUES (?, ?)';
     }
 
     public function update(Subject $subject)
     {
-        $sql = 'UPDATE subjects SET abbrev = ?, name = ? WHERE id = ?';
+        $this->updateStmt()->execute([
+            $subject->getAbbrev(),
+            $subject->getName(),
+            $subject->getId()
+        ]);
+    }
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$subject->abbrev, $subject->name, $subject->getId()]);
+    private function updateStmt(): PDOStatement
+    {
+        if (!isset($this->updateStmt)) {
+            $this->updateStmt = $this->pdo->prepare($this->sqlForUpdate());
+        }
+
+        return $this->updateStmt;
+    }
+
+    private function sqlForUpdate(): string
+    {
+        return 'UPDATE subjects SET abbrev = ?, name = ? WHERE id = ?';
     }
 
     public function delete(int $id)
     {
-        $sql = 'DELETE FROM subjects WHERE id = ?';
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
+        $this->deleteStmt()->execute([$id]);
     }
 
-    protected function findByIdStmt(): PDOStatement
+    private function deleteStmt(): PDOStatement
     {
-        $sql = 'SELECT id, abbrev, name FROM subjects WHERE id = ?';
+        if (!isset($this->deleteStmt)) {
+            $this->deleteStmt = $this->pdo->prepare($this->sqlForDelete());
+        }
 
-        return $this->pdo->prepare($sql);
+        return $this->deleteStmt;
     }
 
-    protected function mapRowToEntity(array $row): Entity
+    private function sqlForDelete()
     {
-        return new Subject($row['abbrev'], $row['name']);
+        return 'DELETE FROM subjects WHERE id = ?';
+    }
+
+    private function mapRowToSubject(array $row): Subject
+    {
+        $subject = new Subject($row['abbrev'], $row['name']);
+        $this->setEntityId($subject, $row['id']);
+
+        return $subject;
     }
 }
