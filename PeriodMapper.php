@@ -2,73 +2,124 @@
 
 class PeriodMapper extends Mapper
 {
+    private $findByIdStmt;
+    private $insertStmt;
+    private $updateStmt;
+    private $deleteStmt;
+
     public function findById(int $id): ?Period
     {
-        $sql = 'SELECT id, period, start_time, end_time FROM periods WHERE id = ?';
+        $this->findByIdStmt()->execute([$id]);
+        $row = $this->findByIdStmt()->fetch();
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
-        $result = $stmt->fetch();
-
-        if (!$result) {
+        if (!$row) {
             return null;
         }
 
-        return $this->mapRowToPeriod($result);
+        return $this->mapRowToPeriod($row);
+    }
+
+    private function findByIdStmt(): PDOStatement
+    {
+        if (!isset($this->findByIdStmt)) {
+            $this->findByIdStmt = $this->pdo->prepare($this->sqlForFindById());
+        }
+
+        return $this->findByIdStmt;
+    }
+
+    private function sqlForFindById(): string
+    {
+        return 'SELECT id, number, start_time, end_time 
+                FROM periods WHERE id = ?';
     }
 
     public function insert(Period $period)
     {
-        $sql = 'INSERT INTO periods (period, start_time, end_time) VALUES (?, ?, ?)';
+        $this->insertStmt()->execute([
+            $period->getNumber(),
+            $this->timestampToMysqlTime($period->getInterval()->getStartTime()),
+            $this->timestampToMysqlTime($period->getInterval()->getEndTime())
+        ]);
 
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            $period->period,
-            $this->stringToMysqlTime($period->startTime),
-            $this->stringToMysqlTime($period->endTime),
-            ]);
+        $this->setEntityId($period, $this->pdo->lastInsertId());
+    }
 
-        $period->id = $this->pdo->lastInsertId();
+    private function insertStmt(): PDOStatement
+    {
+        if (!isset($this->insertStmt)) {
+            $this->insertStmt = $this->pdo->prepare($this->sqlForInsert());
+        }
+
+        return $this->insertStmt;
+    }
+
+    private function sqlForInsert(): string
+    {
+        return 'INSERT INTO periods (number, start_time, end_time) 
+                VALUES (?, ?, ?)';
     }
 
     public function update(Period $period)
     {
-        $sql = 'UPDATE periods SET period = ?, start_time = ?, end_time = ? WHERE id = ?';
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            $period->period,
-            $this->stringToMysqlTime($period->startTime),
-            $this->stringToMysqlTime($period->endTime),
-            $period->id
+        $this->updateStmt()->execute([
+            $period->getNumber(),
+            $this->timestampToMysqlTime($period->getInterval()->getStartTime()),
+            $this->timestampToMysqlTime($period->getInterval()->getEndTime()),
+            $period->getId()
         ]);
+    }
+
+    private function updateStmt(): PDOStatement
+    {
+        if (!$this->updateStmt) {
+            $this->updateStmt = $this->pdo->prepare($this->sqlForUpdate());
+        }
+
+        return $this->updateStmt;
+    }
+
+    private function sqlForUpdate(): string
+    {
+        return 'UPDATE periods SET number = ?, start_time = ?, end_time = ? 
+                WHERE id = ?';
     }
 
     public function delete(int $id)
     {
-        $sql = 'DELETE FROM periods WHERE id = ?';
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
+        $this->deleteStmt()->execute([$id]);
     }
 
-    protected function mapRowToPeriod(array $row): Period
+    private function deleteStmt(): PDOStatement
     {
-        return new Period(
-            $row['period'],
-            $this->mysqlTimeToString($row['start_time']),
-            $this->mysqlTimeToString($row['end_time']),
-            $row['id']
-        );
+        if (!$this->deleteStmt) {
+            $this->deleteStmt = $this->pdo->prepare($this->sqlForDelete());
+        }
+
+        return $this->deleteStmt;
     }
 
-    protected function stringToMysqlTime(string $time): string
+    private function sqlForDelete(): string
     {
-        return date('H:i:s', strtotime($time));
+        return 'DELETE FROM periods WHERE id = ?';
     }
 
-    protected function mysqlTimeToString(string $time): string
+    private function mapRowToPeriod(array $row): Period
     {
-        return date('G:i', strtotime($time));
+        $interval = new Interval($row['start_time'], $row['end_time']);
+        $period = new Period($row['number'], $interval);
+        $this->setEntityId($period, $row['id']);
+
+        return $period;
+    }
+
+    private function timestampToMysqlTime(int $time): string
+    {
+        return date('H:i:s', $time);
+    }
+
+    private function mysqlTimeToTimestamp(string $time): int
+    {
+        return strtotime($time);
     }
 }
