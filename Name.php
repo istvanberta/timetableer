@@ -21,8 +21,13 @@ class Name
         return $this->lastName;
     }
 
-    public function getName(): string
+    public function getFullName(): string
     {
-        return $this->firstName . ' ' . $this->lastName;
+        return $this->getFirstName() . ' ' . $this->getLastName();
+    }
+
+    public function acronym(): string
+    {
+        return $this->getFirstName()[0] . $this->getLastName()[0];
     }
 }
