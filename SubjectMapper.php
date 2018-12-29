@@ -39,6 +39,8 @@ class SubjectMapper extends Mapper
             $subject->getAbbrev(),
             $subject->getName()
         ]);
+
+        $this->setEntityId($subject, $this->pdo->lastInsertId());
     }
 
     private function insertStmt(): PDOStatement
