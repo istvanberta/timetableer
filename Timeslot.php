@@ -10,4 +10,14 @@ class Timeslot
         $this->day = $day;
         $this->period = $period;
     }
+
+    public function getDay(): string
+    {
+        return $this->day;
+    }
+
+    public function getPeriod(): Period
+    {
+        return $this->period;
+    }
 }
