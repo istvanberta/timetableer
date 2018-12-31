@@ -34,8 +34,8 @@ DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `lessons` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `day` ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday') NOT NULL,
-  `period` INT NOT NULL,
+  `day` ENUM('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday') NULL,
+  `period` INT NULL,
   `classe` INT NOT NULL,
   `subject` INT NOT NULL,
   `teacher` INT NULL,
