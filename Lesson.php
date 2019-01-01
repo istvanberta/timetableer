@@ -8,6 +8,7 @@ class Lesson extends Entity
     private $timeslot;
 
     private $isScheduled = false;
+    private $hasTeacher = false;
 
     public function __construct(Subject $subject, Classe $classe)
     {
@@ -18,6 +19,17 @@ class Lesson extends Entity
     public function assignToTeacher(Teacher $teacher)
     {
         $this->teacher = $teacher;
+        $this->hasTeacher = true;
+    }
+
+    public function hasTeacher(): bool
+    {
+        return $this->hasTeacher;
+    }
+
+    public function getTeacher(): ?Teacher
+    {
+        return $this->teacher;
     }
 
     public function scheduleFor(Timeslot $timeslot)
@@ -29,5 +41,10 @@ class Lesson extends Entity
     public function isScheduled(): bool
     {
         return $this->isScheduled;
+    }
+
+    public function getTimeslot(): ?Timeslot
+    {
+        return $this->timeslot;
     }
 }
