@@ -16,6 +16,16 @@ class Lesson extends Entity
         $this->classe = $classe;
     }
 
+    public function getSubject(): Subject
+    {
+        return $this->subject;
+    }
+
+    public function getClasse(): Classe
+    {
+        return $this->classe;
+    }
+
     public function assignToTeacher(Teacher $teacher)
     {
         $this->teacher = $teacher;
