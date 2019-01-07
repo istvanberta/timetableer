@@ -1,0 +1,17 @@
+// {type:class}
+
+[Subject|name;abbrev]
+[Classe|name;abbrev]
+[Group|name;classe;grouptag]
+[Teacher|firstname;lastname;acronym]
+[Lesson|subject;groups;classes;teachers;day;period]
+
+[Lesson]-[note: Lessons are formed by combinig a Subject, a Teacher (or Teachers) and a Group (or Groups). Classes are assigned indirictly through Groups.]
+[Lesson]-[note: The day and period attributes are set during the scheduling process.]
+
+[Lesson]++-1>[Subject]
+[Lesson]++-1..*>[Classe]
+[Lesson]++-1..*>[Group]
+[Lesson]++0..*-1..*>[Teacher]
+
+[Group]++1..*-1>[Classe]
