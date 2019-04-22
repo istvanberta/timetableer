@@ -1,6 +1,6 @@
 <?php
 
-namespace Timetableer;
+namespace Timetableer\Domain;
 
 class Classe extends Entity
 {
@@ -13,12 +13,12 @@ class Classe extends Entity
         $this->abbrev = $abbrev;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getAbbrev()
+    public function getAbbrev(): string
     {
         return $this->abbrev;
     }

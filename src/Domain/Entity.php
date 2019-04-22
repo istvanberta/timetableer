@@ -1,6 +1,6 @@
 <?php
 
-namespace Timetableer;
+namespace Timetableer\Domain;
 
 abstract class Entity
 {
